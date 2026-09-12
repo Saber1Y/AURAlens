@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { LogOut, Wallet } from "lucide-react";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { shortAddress } from "@/lib/formatters";
-import { botChain } from "@/lib/bot/chain";
+import { botChain, botTestnet } from "@/lib/bot/chain";
 
 export function WalletControl({ onAddress }: { onAddress: (address: string) => void }) {
   const { address, isConnected, chainId } = useAccount();
@@ -15,14 +15,14 @@ export function WalletControl({ onAddress }: { onAddress: (address: string) => v
   const connector = connectors[0];
 
   useEffect(() => {
-    if (isConnected && address && chainId !== botChain.id) {
+    if (isConnected && address && chainId !== botChain.id && chainId !== botTestnet.id) {
       switchChain({ chainId: botChain.id });
     }
   }, [isConnected, address, chainId, switchChain]);
 
   useEffect(() => {
     const key = address && chainId ? `${address}:${chainId}` : null;
-    if (isConnected && address && chainId === botChain.id && triggered.current !== key) {
+    if (isConnected && address && (chainId === botChain.id || chainId === botTestnet.id) && triggered.current !== key) {
       triggered.current = key;
       onAddress(address);
     }
@@ -31,10 +31,10 @@ export function WalletControl({ onAddress }: { onAddress: (address: string) => v
   if (isConnected && address) {
     return (
       <div className="wallet-connected">
-        <button className="wallet-address" type="button" onClick={() => onAddress(address)} title={chainId === botChain.id ? "Re-analyze this BOT Chain wallet" : "Wallet is not on BOT Chain"}>
+        <button className="wallet-address" type="button" onClick={() => onAddress(address)} title={chainId === botChain.id || chainId === botTestnet.id ? "Re-analyze this BOT Chain wallet" : "Wallet is not on BOT Chain"}>
           <span className="status-dot" />
           {shortAddress(address)}
-          <b>{chainId === botChain.id ? "BOT Chain" : `Chain ${chainId}`}</b>
+           <b>{chainId === botChain.id ? "BOT Chain" : chainId === botTestnet.id ? "BOT Testnet" : `Chain ${chainId}`}</b>
         </button>
         <button className="icon-button" type="button" onClick={() => disconnect()} aria-label="Disconnect wallet" title="Disconnect wallet">
           <LogOut size={16} />

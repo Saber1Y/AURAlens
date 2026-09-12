@@ -331,10 +331,16 @@ footer p { margin: 0; }
 .sidebar-foot b { color: var(--signal); float: right; font-weight: 500; }
 .sidebar-foot p { color: #7f897c; font-family: var(--font-sans), Arial, sans-serif; font-size: 10px; letter-spacing: 0; line-height: 1.5; margin: 17px 0 0; text-transform: none; }
 .dashboard-main { min-width: 0; padding: 30px; }
-.dashboard-toolbar { align-items: end; background: var(--surface); border: 1px solid var(--line); display: grid; gap: 40px; grid-template-columns: minmax(270px, 0.65fr) minmax(390px, 1.35fr); padding: 28px; }
+.dashboard-toolbar { align-items: end; background: var(--surface); border: 1px solid var(--line); display: grid; gap: 24px 40px; grid-template-columns: minmax(270px, 1fr) auto; padding: 28px; }
 .dashboard-toolbar .section-index { margin-bottom: 9px; }
 .dashboard-toolbar h2 { font-size: clamp(1.8rem, 3vw, 3rem); max-width: 500px; }
 .dashboard-toolbar .analysis-form { margin: 0; max-width: none; }
+.dashboard-toolbar .network-toggle { align-self: start; }
+.network-toggle { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); background: var(--ink); }
+.network-toggle button { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: 0.08em; padding: 8px 10px; }
+.network-toggle button:hover { color: var(--paper); }
+.network-toggle button.active { background: var(--signal); color: var(--ink); }
+.dashboard-toolbar .analysis-form { grid-column: 2; }
 .dashboard-page .results-shell { margin-top: 22px; max-width: none; }
 .dashboard-page .overview-section, .dashboard-page .strategy-section, .dashboard-page .developer-panel { border: 1px solid var(--line); margin-top: 18px; padding: 28px; }
 .dashboard-page .overview-section { margin-top: 0; }
@@ -420,6 +426,7 @@ footer p { margin: 0; }
   .sidebar-foot { display: none; }
   .dashboard-main { padding: 14px; }
   .dashboard-toolbar { align-items: stretch; display: flex; flex-direction: column; gap: 28px; padding: 20px; }
+  .dashboard-toolbar .analysis-form { grid-column: auto; }
   .dashboard-toolbar .address-field { align-items: stretch; display: grid; grid-template-columns: 1fr; padding: 0; }
   .dashboard-toolbar .address-field input { height: 50px; padding-right: 17px; }
   .dashboard-toolbar .analyze-button { height: 44px; margin: 0 5px 5px; width: auto; }

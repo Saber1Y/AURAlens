@@ -15,7 +15,7 @@ export class AuraApiError extends Error {
   }
 }
 
-export async function getAuraStrategies(address: string): Promise<AuraAnalysis> {
+export async function getAuraStrategies(address: string, chainId = 677): Promise<AuraAnalysis> {
   if (!isAddress(address)) {
     throw new AuraApiError("Enter a valid EVM wallet address.", 400);
   }
@@ -37,5 +37,5 @@ export async function getAuraStrategies(address: string): Promise<AuraAnalysis> 
 
   const data = (await response.json()) as AuraApiResponse;
   const analysis = normalizeAuraResponse(address, data);
-  return augmentWithBotChain(analysis);
+  return augmentWithBotChain(analysis, chainId);
 }

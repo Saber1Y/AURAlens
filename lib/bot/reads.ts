@@ -1,29 +1,29 @@
 import { createPublicClient, http } from "viem";
-import { botChain, TUSDT_ADDRESS, TUSDT_ABI } from "@/lib/bot/chain";
+import { botChain, getBotNetwork, TUSDT_ABI } from "@/lib/bot/chain";
 import type { AuraAnalysis, AuraBotRead, AuraNetworkPortfolio, AuraToken } from "@/lib/aura/types";
-
-const botClient = createPublicClient({
-  chain: botChain,
-  transport: http(botChain.rpcUrls.default.http[0]),
-});
 
 export type BotBalances = {
   nativeBOT: number;
   tusdt: number;
 };
 
-export async function readBotBalances(address: string): Promise<BotBalances | null> {
+export async function readBotBalances(address: string, chainId: number = botChain.id): Promise<BotBalances | null> {
   try {
+    const network = getBotNetwork(chainId);
+    const botClient = createPublicClient({
+      chain: network.chain,
+      transport: http(network.chain.rpcUrls.default.http[0]),
+    });
     const [nativeBigInt, tusdtBigInt, decimals] = await Promise.all([
       botClient.getBalance({ address: address as `0x${string}` }),
       botClient.readContract({
-        address: TUSDT_ADDRESS,
+        address: network.tusdtAddress,
         abi: TUSDT_ABI,
         functionName: "balanceOf",
         args: [address as `0x${string}`],
       }),
       botClient.readContract({
-        address: TUSDT_ADDRESS,
+        address: network.tusdtAddress,
         abi: TUSDT_ABI,
         functionName: "decimals",
       }),
@@ -38,12 +38,13 @@ export async function readBotBalances(address: string): Promise<BotBalances | nu
   }
 }
 
-export async function augmentWithBotChain(analysis: AuraAnalysis): Promise<AuraAnalysis> {
-  const balances = await readBotBalances(analysis.address);
+export async function augmentWithBotChain(analysis: AuraAnalysis, chainId: number = botChain.id): Promise<AuraAnalysis> {
+  const network = getBotNetwork(chainId);
+  const balances = await readBotBalances(analysis.address, chainId);
   if (!balances) return analysis;
 
-  const tokens = buildBotTokens(balances);
-  const botEntry = buildBotEntry(balances);
+  const tokens = buildBotTokens(balances, chainId);
+  const botEntry = buildBotEntry(balances, chainId);
   if (tokens.length === 0) return analysis;
 
   return {
@@ -53,16 +54,17 @@ export async function augmentWithBotChain(analysis: AuraAnalysis): Promise<AuraA
     networkCount: 1,
     assetCount: tokens.length,
     bot: {
-      chainId: "677",
-      network: "BOT Chain",
-      rpcUrl: botChain.rpcUrls.default.http[0],
-      explorerUrl: "https://scan.botchain.ai",
+      chainId: String(network.chain.id),
+      network: network.networkName,
+      rpcUrl: network.chain.rpcUrls.default.http[0],
+      explorerUrl: network.chain.blockExplorers.default.url,
       balances,
     },
   };
 }
 
-export function buildBotTokens(balances: BotBalances): AuraToken[] {
+export function buildBotTokens(balances: BotBalances, chainId: number = botChain.id): AuraToken[] {
+  const tusdtAddress = getBotNetwork(chainId).tusdtAddress;
   const tokens: AuraToken[] = [];
   if (balances.nativeBOT > 0) {
     tokens.push({
@@ -78,20 +80,21 @@ export function buildBotTokens(balances: BotBalances): AuraToken[] {
       balance: balances.tusdt,
       balanceUSD: 0,
       decimals: 6,
-      address: TUSDT_ADDRESS,
+       address: tusdtAddress,
     });
   }
   return tokens;
 }
 
-export function buildBotEntry(balances: BotBalances): AuraNetworkPortfolio {
+export function buildBotEntry(balances: BotBalances, chainId: number = botChain.id): AuraNetworkPortfolio {
+  const network = getBotNetwork(chainId);
   return {
     network: {
-      name: "BOT Chain",
-      chainId: "677",
-      explorerUrl: "https://scan.botchain.ai",
+       name: network.networkName,
+       chainId: String(network.chain.id),
+       explorerUrl: network.chain.blockExplorers.default.url,
     },
-    tokens: buildBotTokens(balances),
+     tokens: buildBotTokens(balances, chainId),
     totalBalanceUSD: 0,
   };
 }

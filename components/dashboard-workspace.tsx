@@ -10,6 +10,7 @@ import { WalletOverview } from "@/components/wallet-overview";
 import { StrategyResults } from "@/components/strategy-results";
 import { DeveloperPanel } from "@/components/developer-panel";
 import { WalletControl } from "@/components/wallet-control";
+import { NetworkToggle } from "@/components/network-toggle";
 
 type WorkspaceView = "overview" | "strategies" | "developer";
 
@@ -63,7 +64,8 @@ export function DashboardWorkspace({ view, analysis, initialAddress, initialErro
 
         <div className="dashboard-main">
           <section className="dashboard-toolbar">
-            <div><p className="section-index">{viewMeta[view].label}</p><h2>{viewMeta[view].title}</h2></div>
+             <div><p className="section-index">{viewMeta[view].label}</p><h2>{viewMeta[view].title}</h2></div>
+             <NetworkToggle />
             <form className="analysis-form" onSubmit={analyze} noValidate>
               <label htmlFor="wallet-address">Add wallet address</label>
               <div className={`address-field ${error ? "has-error" : ""}`}>
