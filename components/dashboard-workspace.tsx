@@ -11,6 +11,7 @@ import { StrategyResults } from "@/components/strategy-results";
 import { DeveloperPanel } from "@/components/developer-panel";
 import { WalletControl } from "@/components/wallet-control";
 import { NetworkToggle } from "@/components/network-toggle";
+import { ProofFooter } from "@/components/proof-footer";
 
 type WorkspaceView = "overview" | "strategies" | "developer";
 
@@ -84,7 +85,7 @@ export function DashboardWorkspace({ view, analysis, initialAddress, initialErro
         </div>
       </div>
 
-      <footer><span>AuraLens workspace</span><p>Application layer by AuraLens. Wallet intelligence by AURA.</p><span>2026</span></footer>
+      <ProofFooter />
     </main>
   );
 }

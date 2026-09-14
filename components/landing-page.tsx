@@ -1,5 +1,6 @@
 import { ArrowRight, Layers3, ScanSearch, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { ProofFooter } from "@/components/proof-footer";
 
 const steps = [
   { number: "01", title: "BOT Chain wallet", text: "Connect a BOT Chain wallet or paste any EVM address. The wallet becomes the input." },
@@ -65,7 +66,7 @@ export function LandingPage() {
         <Link className="primary-link" href="/dashboard">Open AuraLens <ArrowRight size={16} /></Link>
       </section>
 
-      <footer><span>AuraLens</span><p>Application layer by AuraLens. Wallet intelligence by AURA.</p><span>2026</span></footer>
+      <ProofFooter />
     </main>
   );
 }
