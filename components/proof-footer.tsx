@@ -10,6 +10,9 @@ export function ProofFooter() {
         <div><span>Reference Address</span><code>{tokenAddress}</code></div>
       </div>
       <div className="proof-footer__muted">Latest Receipt: N/A - no project-owned transaction</div>
+      <a href="https://x.com/use_auralens" target="_blank" rel="noreferrer" className="proof-footer__social">
+        Follow @use_auralens on X ↗
+      </a>
     </footer>
   );
 }

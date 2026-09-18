@@ -248,6 +248,7 @@ footer p { margin: 0; }
 .proof-footer__grid span, .proof-footer__muted { color: var(--muted); font-size: 8px; }
 .proof-footer__grid strong, .proof-footer__grid code { color: var(--ink); font-size: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .proof-footer__muted { align-self: end; }
+.proof-footer__social { color: var(--signal-deep); font-size: 10px; font-weight: 600; grid-column: 1 / -1; justify-self: start; }
 @media (max-width: 800px) { .proof-footer { grid-template-columns: 1fr; } .proof-footer__grid { grid-template-columns: 1fr; } }
 .spin { animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
